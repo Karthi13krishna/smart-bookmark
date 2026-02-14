@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import AddBookmarkForm from './AddBookmarkForm';
 import DisplayBookmarks from './DisplayBookmarks';
 import { deleteBookmark, getBookmarks } from '@/app/actions';
+import { User } from '@supabase/supabase-js';
 
 export type Bookmark = {
   id: string;
@@ -18,6 +19,16 @@ export default function BookmarksDashboard({ userId }: { userId: string }) {
   const supabase = useMemo(() => createClient(), []);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setUser(data.user);
+    };
+
+    fetchUser();
+  }, [supabase.auth]);
 
   // Initial Fetch
   useEffect(() => {
@@ -70,6 +81,16 @@ export default function BookmarksDashboard({ userId }: { userId: string }) {
 
   return (
     <div className="flex flex-col gap-6">
+      {user && (
+        <div className="flex flex-col gap-0.5 justify-center items-center mb-6 text-center">
+          <h2 className="text-2xl font-bold">
+            Hello, {user.user_metadata?.full_name}
+          </h2>
+          <p className="text-gray-500">
+            Welcome to your curated digital library
+          </p>
+        </div>
+      )}
       <AddBookmarkForm userId={userId} />
 
       <DisplayBookmarks

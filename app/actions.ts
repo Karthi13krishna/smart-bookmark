@@ -35,6 +35,9 @@ export async function addBookmark({
 
   if (!title || !url) throw new Error('Title and URL are required');
 
+  const urlPattern = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/;
+  if (!urlPattern.test(url)) throw new Error('Invalid URL format');
+
   const { data, error } = await supabase.from('bookmarks').insert({
     title,
     url,
@@ -43,7 +46,7 @@ export async function addBookmark({
 
   if (error) throw new Error(error.message);
 
-  return data;
+  return { data, error };
 }
 
 /* -----------------------------

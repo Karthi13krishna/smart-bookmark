@@ -22,7 +22,7 @@ export default function LogoutButton() {
       onClick={handleLogout}
       disabled={loading}
     >
-      {loading ? 'Logging out...' : <FiLogOut />}
+      {loading ? 'Logging out...' : <FiLogOut className="w-5 h-5" />}
     </button>
   );
 }

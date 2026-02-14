@@ -35,9 +35,9 @@ export default function Navigation() {
   }, [supabase.auth]);
 
   return (
-    <nav className=" px-6 py-4 flex items-center justify-between">
+    <nav className="px-8 py-6 flex items-center justify-between">
       <Link href="/" className="flex gap-2 justify-center items-center">
-        <MdBookmarks className="bg-blue-500 text-white p-1.5 w-8 h-8 rounded" />
+        <MdBookmarks className="bg-blue-500 text-white p-1.5 w-8 h-8 rounded-xl" />
         <h1 className="text-lg font-bold">Smart Bookmark</h1>
       </Link>
 
