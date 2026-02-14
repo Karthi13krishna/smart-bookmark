@@ -1,13 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
 import { Bookmark } from './Bookmarks';
 import { addBookmark } from '@/app/actions';
 
 export default function AddBookmarkForm({
   userId,
-  setBookmarks,
 }: {
   userId: string;
   setBookmarks: React.Dispatch<React.SetStateAction<Bookmark[]>>;

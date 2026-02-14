@@ -4,13 +4,14 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import AddBookmarkForm from './AddBookmarkForm';
 import DisplayBookmarks from './DisplayBookmarks';
-import { getBookmarks } from '@/app/actions';
+import { deleteBookmark, getBookmarks } from '@/app/actions';
 
 export type Bookmark = {
   id: string;
   title: string;
   url: string;
   created_at: string;
+  user_id: string;
 };
 
 export default function BookmarksDashboard({ userId }: { userId: string }) {
@@ -58,13 +59,8 @@ export default function BookmarksDashboard({ userId }: { userId: string }) {
     };
   }, [userId, supabase]);
 
-  const handleDelete = async (id: string) => {
-    const { error } = await supabase.from('bookmarks').delete().eq('id', id);
-
-    if (error) {
-      alert(error.message);
-      return;
-    }
+  const handleDelete = async (id: string, userId: string) => {
+    await deleteBookmark(id, userId);
 
     // ✅ Update UI instantly
     setBookmarks((prev) => prev.filter((b) => b.id !== id));

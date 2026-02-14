@@ -9,7 +9,7 @@ export default function DisplayBookmarks({
 }: {
   bookmarks: Bookmark[];
   loading: boolean;
-  onDelete: (id: string) => void;
+  onDelete: (id: string, user_id: string) => void;
 }) {
   if (loading) return <p className="text-gray-500">Loading bookmarks...</p>;
 
@@ -35,7 +35,7 @@ export default function DisplayBookmarks({
             </a>
           </div>
           <button
-            onClick={() => onDelete(b.id)}
+            onClick={() => onDelete(b.id, b.user_id)}
             className="text-red-500 text-sm"
           >
             Delete
