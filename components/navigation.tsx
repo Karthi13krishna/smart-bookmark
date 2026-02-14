@@ -1,15 +1,18 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import LogoutButton from '@/components/LogoutButton';
 import SignInButton from './SignInButton';
 import Image from 'next/image';
-import { Bookmark } from 'lucide-react';
+import { MdBookmarks } from 'react-icons/md';
 import { User } from '@supabase/supabase-js';
 
+import { FaGoogle } from 'react-icons/fa6';
+import Link from 'next/link';
+
 export default function Navigation() {
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -32,11 +35,11 @@ export default function Navigation() {
   }, [supabase.auth]);
 
   return (
-    <nav className="bg-gray-900 text-white px-6 py-4 flex items-center justify-between">
-      <div className="flex gap-2 justify-center items-center">
-        <Bookmark className="bg-blue-500 text-white p-1 w-8 h-8 rounded" />
+    <nav className=" px-6 py-4 flex items-center justify-between">
+      <Link href="/" className="flex gap-2 justify-center items-center">
+        <MdBookmarks className="bg-blue-500 text-white p-1.5 w-8 h-8 rounded" />
         <h1 className="text-lg font-bold">Smart Bookmark</h1>
-      </div>
+      </Link>
 
       {user ? (
         <div className="flex items-center gap-4">
@@ -50,7 +53,9 @@ export default function Navigation() {
           <LogoutButton />
         </div>
       ) : (
-        <SignInButton />
+        <SignInButton>
+          <FaGoogle />
+        </SignInButton>
       )}
     </nav>
   );

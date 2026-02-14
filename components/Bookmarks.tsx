@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import AddBookmarkForm from './AddBookmarkForm';
 import DisplayBookmarks from './DisplayBookmarks';
@@ -15,11 +15,11 @@ export type Bookmark = {
 };
 
 export default function BookmarksDashboard({ userId }: { userId: string }) {
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Initial Fetch
+  // Initial Fetch
   useEffect(() => {
     const fetchBookmarks = async () => {
       const data = await getBookmarks({ user_id: userId });
@@ -28,9 +28,9 @@ export default function BookmarksDashboard({ userId }: { userId: string }) {
     };
 
     fetchBookmarks();
-  }, [userId, supabase]);
+  }, [userId]);
 
-  // ✅ Realtime Sync
+  // Realtime Sync
   useEffect(() => {
     const channel = supabase
       .channel('bookmarks-realtime')
@@ -47,7 +47,7 @@ export default function BookmarksDashboard({ userId }: { userId: string }) {
             setBookmarks((prev) => [payload.new as Bookmark, ...prev]);
           }
 
-          if (payload.eventType === 'DELETE') {
+          if (payload.eventType === 'DELETE' && payload.old?.id) {
             setBookmarks((prev) => prev.filter((b) => b.id !== payload.old.id));
           }
         },
@@ -59,16 +59,18 @@ export default function BookmarksDashboard({ userId }: { userId: string }) {
     };
   }, [userId, supabase]);
 
-  const handleDelete = async (id: string, userId: string) => {
-    await deleteBookmark(id, userId);
-
-    // ✅ Update UI instantly
-    setBookmarks((prev) => prev.filter((b) => b.id !== id));
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteBookmark(id);
+      setBookmarks((prev) => prev.filter((b) => b.id !== id));
+    } catch (err) {
+      console.error('Failed to delete bookmark:', err);
+    }
   };
 
   return (
     <div className="flex flex-col gap-6">
-      <AddBookmarkForm userId={userId} setBookmarks={setBookmarks} />
+      <AddBookmarkForm userId={userId} />
 
       <DisplayBookmarks
         bookmarks={bookmarks}

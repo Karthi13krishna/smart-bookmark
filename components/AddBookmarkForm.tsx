@@ -1,15 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Bookmark } from './Bookmarks';
 import { addBookmark } from '@/app/actions';
 
-export default function AddBookmarkForm({
-  userId,
-}: {
-  userId: string;
-  setBookmarks: React.Dispatch<React.SetStateAction<Bookmark[]>>;
-}) {
+export default function AddBookmarkForm({ userId }: { userId: string }) {
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -20,16 +14,15 @@ export default function AddBookmarkForm({
 
     setLoading(true);
 
-    await addBookmark({
-      title,
-      url,
-      user_id: userId,
-    });
-
-    setLoading(false);
-
-    setTitle('');
-    setUrl('');
+    try {
+      await addBookmark({ title, url, user_id: userId });
+      setTitle('');
+      setUrl('');
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

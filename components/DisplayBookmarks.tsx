@@ -1,5 +1,6 @@
 'use client';
 
+import { FaTrash } from 'react-icons/fa6';
 import { Bookmark } from './Bookmarks';
 
 export default function DisplayBookmarks({
@@ -11,10 +12,11 @@ export default function DisplayBookmarks({
   loading: boolean;
   onDelete: (id: string, user_id: string) => void;
 }) {
-  if (loading) return <p className="text-gray-500">Loading bookmarks...</p>;
+  if (loading)
+    return <p className="text-gray-500 text-center">Loading bookmarks...</p>;
 
   if (bookmarks.length === 0)
-    return <p className="text-gray-500">No bookmarks yet.</p>;
+    return <p className="text-gray-500 text-center">No bookmarks yet.</p>;
 
   return (
     <ul className="flex flex-col gap-2">
@@ -35,10 +37,10 @@ export default function DisplayBookmarks({
             </a>
           </div>
           <button
-            onClick={() => onDelete(b.id, b.user_id)}
-            className="text-red-500 text-sm"
+            onClick={() => b.id && onDelete(b.id, b.user_id)}
+            className="text-red-500 text-sm cursor-pointer hover:text-red-700 transition-colors duration-300 ease-in-out"
           >
-            Delete
+            <FaTrash />
           </button>
         </li>
       ))}
