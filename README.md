@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Smart Bookmark App
 
-## Getting Started
+## Overview
 
-First, run the development server:
+Smart Bookmark is a Google-authenticated, full-stack bookmark manager built with **Next.js (App Router)**, **Supabase**, and **Tailwind CSS**. Users can securely add, delete, and view their own bookmarks in real-time. Each user’s bookmarks are private, and changes are instantly synced across tabs without requiring a page refresh.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Google Auth only:** Users sign up and log in exclusively with Google accounts.
+- **Add bookmarks:** Users can save a URL with a title.
+- **Private bookmarks:** Each user can only see their own bookmarks.
+- **Real-time sync:** Adding a bookmark in one tab updates all other open tabs instantly.
+- **Delete bookmarks:** Users can remove their own bookmarks.
+- **Responsive UI:** Styled with Tailwind CSS for a clean, simple interface.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Next.js (App Router)**
+- **Supabase:** Auth, Database, Realtime
+- **React / TypeScript**
+- **Tailwind CSS**
+- **React Icons** for UI enhancement
 
-## Learn More
+## Technical Implementation
 
-To learn more about Next.js, take a look at the following resources:
+### Authentication
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Integrated **Supabase Auth** for Google login.
+- OAuth callback handled in `/auth/callback/route.ts` to exchange the code for a session and redirect users.
+- Navigation updates immediately on login/logout using `supabase.auth.onAuthStateChange` in client components.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Bookmark Management
 
-## Deploy on Vercel
+- CRUD operations implemented as **server actions** (`actions.ts`) for security and reliability.
+- Input validation (URL format) is enforced on both client and server.
+- `getBookmarks` fetches all bookmarks for the logged-in user, ensuring privacy.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Real-time Sync
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Supabase **Realtime** subscriptions ensure all tabs stay in sync for inserts and deletes.
+- Fallback fetch implemented for deletes when `payload.old` is missing to guarantee consistency.
+
+### Client/Server Component Strategy
+
+- Components that depend on user state (Navigation, bookmarks list) are client components.
+- Server actions handle database operations and return data to client components.
+- Supabase client is memoized in client components to avoid unnecessary re-renders.
+
+### Deployment
+
+- App deployed on **Vercel** for live testing.
+- Realtime features, Google OAuth, and server actions all work in the deployed environment.
+
+## Challenges and Solutions
+
+1. **OAuth callback handling in App Router:**
+
+   - Problem: OAuth login redirects could fail or hit 404.
+   - Solution: Implemented dedicated `route.ts` for `/auth/callback` to exchange code and redirect properly.
+
+2. **Client vs server component issues:**
+
+   - Problem: User-dependent components were not updating correctly; confusion between client and server Supabase usage.
+   - Solution: Converted navigation and user-dependent components to client components and used `useEffect` with `supabase.auth.onAuthStateChange` to update UI.
+
+3. **Real-time synchronization across tabs:**
+
+   - Problem: Bookmarks added in one tab did not appear in others.
+   - Solution: Used Supabase Realtime subscriptions combined with initial fetch and fallback for deletes when `payload.old` was missing.
+
+4. **URL validation:**
+
+   - Problem: Invalid URLs could be submitted.
+   - Solution: Implemented regex validation both in client form and server action.
+
+## Project Structure
+
+- `app/actions.ts` — Server actions for bookmark CRUD
+- `components/Navigation.tsx` — Client-side navigation with auth state handling
+- `components/AddBookmarkForm.tsx` — Form with input validation
+- `components/DisplayBookmarks.tsx` — Bookmark list with real-time updates
+- `components/Bookmarks.tsx` — Combines form and list, manages subscriptions
+- `lib/supabase/client.ts` — Browser Supabase client
+- `lib/supabase/server.ts` — Server Supabase client
+
+## Live Demo
+
+- **Vercel URL:** [https://bookmark.karthi.fyi](https://bookmark.karthi.fyi)
+- **GitHub Repo:** [https://github.com/Karthi13krishna/smart-bookmark](https://github.com/Karthi13krishna/smart-bookmark)
+
