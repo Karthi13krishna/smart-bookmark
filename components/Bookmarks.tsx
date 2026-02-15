@@ -82,7 +82,7 @@ export default function BookmarksDashboard({ userId }: { userId: string }) {
   return (
     <div className="flex flex-col gap-6">
       {user && (
-        <div className="flex flex-col gap-0.5 justify-center items-center mb-6 text-center">
+        <div className="flex flex-col gap-0.5 justify-center items-center mb-2 text-center">
           <h2 className="text-2xl font-bold">
             Hello, {user.user_metadata?.full_name}
           </h2>

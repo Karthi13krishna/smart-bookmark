@@ -20,7 +20,7 @@ export default function DisplayBookmarks({
 
   return (
     <>
-      <h2 className="text-2xl font-bold text-center mt-6">
+      <h2 className="text-xl font-semibold text-center mt-6">
         All Bookmarks{' '}
         <span className="text-gray-500">({bookmarks.length})</span>
       </h2>
@@ -28,7 +28,7 @@ export default function DisplayBookmarks({
         {bookmarks.map((b) => (
           <li
             key={b.id}
-            className="border-2 border-gray-600 rounded-xl py-3 px-6 flex justify-between items-center"
+            className="border-2 border-gray-400 dark:border-gray-600 rounded-xl py-3 px-6 flex justify-between items-center"
           >
             <div className="flex flex-col">
               <p className="font-semibold">{b.title}</p>

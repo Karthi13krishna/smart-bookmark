@@ -32,14 +32,14 @@ export default function AddBookmarkForm({ userId }: { userId: string }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-3 border-2 border-gray-600 p-4 rounded-xl w-full"
+      className="flex flex-col gap-3 border-2 border-gray-400 dark:border-gray-600 p-4 rounded-xl w-full"
     >
       <h2 className="font-semibold text-lg mb-2 ml-2">Add Bookmark</h2>
 
       <div className="flex gap-2">
         <div className="flex flex-col gap-2">
           <input
-            className="border-2 border-gray-600 px-3 py-2 rounded-lg"
+            className="border-2 border-gray-400 dark:border-gray-600 px-3 py-2 rounded-lg"
             placeholder="Title"
             name="title"
             id="title"
@@ -52,7 +52,7 @@ export default function AddBookmarkForm({ userId }: { userId: string }) {
         </div>
         <div className="flex flex-col gap-2">
           <input
-            className="border-2 border-gray-600 px-3 py-2 rounded-lg"
+            className="border-2 border-gray-400 dark:border-gray-600 px-3 py-2 rounded-lg"
             placeholder="https://example.com"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
