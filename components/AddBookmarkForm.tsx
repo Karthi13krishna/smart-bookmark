@@ -12,7 +12,10 @@ export default function AddBookmarkForm({ userId }: { userId: string }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim() || !url.trim()) return;
+    if (!title.trim() || !url.trim()) {
+      setError('Title and URL are required');
+      return;
+    }
 
     setLoading(true);
 
@@ -57,9 +60,11 @@ export default function AddBookmarkForm({ userId }: { userId: string }) {
             className="border-2 border-gray-400 dark:border-gray-600 px-3 py-2 rounded-lg"
             placeholder="https://example.com"
             value={url}
+            name="url"
+            id="url"
             onChange={(e) => setUrl(e.target.value)}
           />
-          <label htmlFor="title" className="text-sm text-gray-400 ml-1">
+          <label htmlFor="url" className="text-sm text-gray-400 ml-1">
             URL
           </label>
         </div>
@@ -74,7 +79,9 @@ export default function AddBookmarkForm({ userId }: { userId: string }) {
         </button>
       </div>
 
-      {error && <p className="text-red-500">{error}</p>}
+      {error && (
+        <p className="text-red-500 text-center sm:text-left">{error}</p>
+      )}
     </form>
   );
 }
