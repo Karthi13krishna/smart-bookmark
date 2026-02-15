@@ -34,12 +34,12 @@ export default function DisplayBookmarks({
             <div className="flex flex-col">
               <p className="font-semibold">{b.title}</p>
               <a
-                href={b.url}
+                href={`https://${b.url}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-500 break-all flex items-center gap-1 hover:text-blue-700 transition-colors duration-300 ease-in-out"
               >
-                {b.url} <Link className="w-4 h-4" />
+                {`https://${b.url}`} <Link className="w-4 h-4" />
               </a>
             </div>
             <button
