@@ -1,5 +1,6 @@
 'use client';
 
+import { Link } from 'lucide-react';
 import { Bookmark } from './Bookmarks';
 import { MdBookmarkRemove } from 'react-icons/md';
 
@@ -36,9 +37,9 @@ export default function DisplayBookmarks({
                 href={b.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 text-sm break-all"
+                className="text-blue-500 break-all flex items-center gap-1 hover:text-blue-700 transition-colors duration-300 ease-in-out"
               >
-                {b.url}
+                {b.url} <Link className="w-4 h-4" />
               </a>
             </div>
             <button
